@@ -1,0 +1,135 @@
+*{
+    font-family: calibri;
+}
+.bg-one{
+    background-color: #6AB46D;
+}
+.bg-two{
+    background-color: #099146;
+}
+.navbar-brand img{
+    height: 50px
+}
+
+.btn-nav-2{
+    background-color: #099146;
+    color: white !important;
+    border: 1px solid white;
+    transition: 1s;
+    font-weight:bold;
+    margin-left: 20px;
+    border-radius: 20px;
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+}
+.btn-nav-2:hover{
+    background-color: white;
+    color: #099146 !important;
+}
+.l-app{
+    color: #099146;
+}
+.bold{
+    font-weight:bold;
+}
+.book-cover{
+    width: 100%;
+    height: 200px;
+    animation: 2s lighter infinite linear;
+}
+.l-load{
+    display: block;
+    width: 80%;
+    background-color:#DCDDDD;
+    height: 8px;
+    margin-top: 20px;
+    animation: 1s lighter infinite linear;
+}
+.book-title{
+    font-weight:bold;
+    line-height: 16px;
+    margin-top: 10px;
+    transition: 0.5s;
+    cursor: pointer;
+}
+.book-title:hover{
+    color:#099146!important
+}
+.book-author{
+    line-height: 16px;
+    margin-top: 2px;
+    color: grey;
+    font-size: 15px;
+}
+.book-image{
+    height: 100%;
+    width:100%;
+}
+.pointer{
+    cursor: pointer !important;
+}
+.page-link{
+    color: #099146 !important;
+}
+.pag-active{
+    background-color: #099146 !important;
+    color: white !important;
+}
+.book-title-detail{
+    font-weight:bold;
+    line-height: 24px;
+    margin-top: 10px;
+    transition: 0.5s;
+    font-size:20px;
+    cursor: pointer;
+}
+.book-cover-detail{
+    width: 100%;
+    height: 450px;
+    /*animation: 3s lighter infinite linear;*/
+}
+.book-image-detail{
+    height: 100%;
+    width:100%;
+}
+
+.p{
+    line-height: 20px !important;
+}
+
+
+@keyframes lighter{
+    0% {
+      background-color:#E8E9E9
+    }
+    50%{
+      background-color:#B0B2B3
+    }
+    100%{
+      background-color:#E8E9E9
+    }
+}
+
+@media (max-width: 500px) {
+    .navbar-brand img{
+        height: 40px;
+    }
+    .navbar{
+        padding-left: 0px;
+    }
+    .btn-nav-2{
+        margin-top:10px;
+        margin-bottom: 10px;
+    }
+    .navbar-toggler{
+        color: white !important;
+    }
+    .book-image-detail{
+        height: 100%;
+        width:60%;
+    }
+    .book-cover-detail{
+        text-align: center;
+        height: 250px;
+    }
+}
