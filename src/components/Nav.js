@@ -23,7 +23,7 @@ class Nav extends Component{
                 isLoading:false,
             })
             localStorage.clear()
-            window.location.href =process.env.REACT_APP_BASE_URL+'/login'
+            window.location.href =process.env.REACT_APP_BASE_URL
         })
         .catch((error) => {
             this.setState({
