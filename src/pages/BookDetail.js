@@ -51,16 +51,16 @@ class BookDetail extends Component{
         const {bookId, role} = this.props.match.params
         await getBookById(atob(bookId))
         .then(async (response) => {
-            console.log(response.data.data)
             this.setState({
                 book: response.data.data,
                 isLoading: false,
                 status:response.data.data.status,
             });
-
-            if(response.data.data.status === 1 || response.data.data.status === "1" && role){
+            console.log(response.data.data.status)
+            if(response.data.data.status === 0 || response.data.data.status === "0" && role !== 1 || role !== "1" ){
                 await checkBook(atob(bookId))
                 .then((response) => {
+                    console.log(response.data.data.message)
                     this.setState({
                         userMatch: response.data.data.message,
                     });
@@ -83,7 +83,7 @@ class BookDetail extends Component{
         let btn;
         if(role == 0)
         {
-            if(status ==1){
+            if(status == 1){
                 btn = <>
                 <button className="btn btn-success mx-2 float-lg-right" onClick={this.handleTransaction}>
                     <i className="fas fa-bookmark"></i> Borrow
