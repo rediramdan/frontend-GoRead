@@ -23,7 +23,6 @@ class RefreshToken extends Component{
         })
         .catch((error) => {
             window.location.href =process.env.REACT_APP_BASE_URL
-            this.props.history.push("/login")
         })
     }
 

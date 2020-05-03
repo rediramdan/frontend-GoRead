@@ -20,7 +20,7 @@ class BookEdit extends Component{
     render(){
         return (
             <>
-                <Nav {...this.props}/>
+                <Nav {...this.props} name={'manage'}/>
                 <div className="container mt-5 pt-2">
                     <div className="row mt-3 justify-content-center">
                         <div className="col-lg-5">

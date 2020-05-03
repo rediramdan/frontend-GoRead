@@ -8,9 +8,9 @@ import RealBook from '../components/RealBook'
 import Paginate from '../components/Paginate'
 import Footer from '../components/Footer'
 
-import {getAllBooks} from '../utils/http'
+import {getMyBooks} from '../utils/http'
 
-class BooksList extends Component{
+class MyBooks extends Component{
 
     state = {
         search : "",
@@ -26,7 +26,7 @@ class BooksList extends Component{
 
      getData = async () => {
         
-        await getAllBooks(this.state)
+        await getMyBooks(this.state)
         .then((response) => {
             this.setState({
                 data: response.data.data,
@@ -36,6 +36,9 @@ class BooksList extends Component{
         })
         .catch((error) => {
             console.log(error)
+            if(error.response.data.data.message === "JsonWebTokenError" || error.response.data.data.message === "TokenExpiredError"){
+                this.props.history.push("/refresh-token")
+            }
         })
     }
 
@@ -60,7 +63,7 @@ class BooksList extends Component{
         const {pagination,data,role} = this.state
         const bookList = data.map(data => {
             return (
-                <RealBook data={data} name={"Created at"} key={data.id}/>
+                <RealBook data={data} name={"Borrow at"} key={data.id}/>
             )
         })
         const paginationView = <Paginate pagination={pagination} key={pagination.currentPage} handlerChange={this.handlerChange}/>
@@ -80,13 +83,13 @@ class BooksList extends Component{
         }
         return(
             <>
-            <Nav {...this.props} name={'home'}/>
+            <Nav {...this.props} name={'mybooks'}/>
             <div className="container mt-5 pt-2">
                 <div className="row mt-3 justify-content-center">
                     <div className="col-lg-10">
                         <div className="row">
                             <div className="col-lg-4">
-                                <h2 className="l-app bold">Books List</h2>
+                                <h2 className="l-app bold"> My Books</h2>
                                 {btn}
                             </div>
                             <div className="col-lg-4">
@@ -145,4 +148,4 @@ class BooksList extends Component{
     }
 }
 
-export default BooksList
+export default MyBooks

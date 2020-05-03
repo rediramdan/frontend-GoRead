@@ -1,6 +1,6 @@
 import React,{Component} from 'react'
 import {Link} from 'react-router-dom'
-import { getBookById } from '../utils/http'
+import { getBookById,deleteBook,transactionBook,checkBook } from '../utils/http'
 
 import Nav from '../components/Nav'
 import Footer from '../components/Footer'
@@ -9,17 +9,66 @@ class BookDetail extends Component{
 
     state = {
         book :{},
+        status:"",
+        userMatch:false,
+        role : atob(localStorage.getItem('_h')),
+        id : atob(this.props.match.params.bookId),
         isLoading : true
     }
 
+    handleDelete = async (e) => {
+        e.preventDefault()
+        await deleteBook(this.state.id)
+        .then(() => {
+            this.props.history.push("/")
+        })
+        .catch((error) => {
+            if(error.response.data.data.message === "JsonWebTokenError" || error.response.data.data.message === "TokenExpiredError"){
+                this.props.history.push("/refresh-token")
+            }
+        })
+    }
+
+    handleTransaction = async (e) => {
+        let st = ""
+        if(this.state.status===1){
+            st = 0
+        }else{
+            st = 1
+        }
+        await transactionBook({status:st},this.state.id)
+        .then(() => {
+            this.props.history.push("/mybooks")
+        })
+        .catch((error) => {
+            if(error.response.data.data.message === "JsonWebTokenError" || error.response.data.data.message === "TokenExpiredError"){
+                this.props.history.push("/refresh-token")
+            }
+        })
+    }
+
     async componentDidMount(){
-        const {bookId} = this.props.match.params
+        const {bookId, role} = this.props.match.params
         await getBookById(atob(bookId))
-        .then((response) => {
+        .then(async (response) => {
+            console.log(response.data.data)
             this.setState({
                 book: response.data.data,
-                isLoading: false
+                isLoading: false,
+                status:response.data.data.status,
             });
+
+            if(response.data.data.status === 1 || response.data.data.status === "1" && role){
+                await checkBook(atob(bookId))
+                .then((response) => {
+                    this.setState({
+                        userMatch: response.data.data.message,
+                    });
+                })
+                .catch((error) => {
+                    console.log(error)
+                })
+            }
         })
         .catch((error) => {
             console.log(error)
@@ -30,7 +79,42 @@ class BookDetail extends Component{
 
 
     render(){
-        const {book,isLoading} = this.state
+        const {book,isLoading,role,status,userMatch} = this.state
+        let btn;
+        if(role == 0)
+        {
+            if(status ==1){
+                btn = <>
+                <button className="btn btn-success mx-2 float-lg-right" onClick={this.handleTransaction}>
+                    <i className="fas fa-bookmark"></i> Borrow
+                </button>
+            </>
+            }else{
+                if(userMatch){
+                    btn = <>
+                    <button className="btn btn-success mx-2 float-lg-right" onClick={this.handleTransaction}>
+                        <i className="fas fa-bookmark"></i> Return
+                    </button>
+                    </>
+                }else{
+                    btn = <></>
+                }
+                
+            }
+        }else if(role == 1){
+             btn = <>
+                            <button className="btn btn-success mx-lg-2 float-lg-right" onClick={this.handleDelete}>
+                            <i className="fas fa-trash"></i>
+                            </button>
+                            <Link to={'/book/edit/'+btoa(book.id)}>
+                            <button className="btn btn-success mx-2 float-lg-right">
+                                <i className="fas fa-edit"></i>
+                            </button>
+                            </Link>
+                        </>
+        }else{
+             btn = ""
+        }
         return (
             <>
                 <Nav {...this.props}/>
@@ -38,18 +122,11 @@ class BookDetail extends Component{
                     <div className="row mt-3 justify-content-center">
                         <div className="col-lg-10">
                             <div className="row">
-                                <div className="col-lg-8">
+                                <div className="col-7">
                                     <h3 className="l-app bold">Book Detail</h3>
                                 </div>
-                                <div className="col-lg-4">
-                                    <button className="btn btn-success mx-lg-2 float-lg-right">
-                                        <i className="fas fa-trash"></i>
-                                    </button>
-                                    <Link to={'/book/edit/'+btoa(book.id)}>
-                                    <button className="btn btn-success mx-2 float-lg-right">
-                                        <i className="fas fa-edit"></i>
-                                    </button>
-                                    </Link>
+                                <div className="col-5">
+                                    {btn}
                                 </div>
                             </div>
                             <hr className="my-2 my-lg-0"/>
@@ -65,10 +142,14 @@ class BookDetail extends Component{
                                                {!isLoading?(<img src={'http://localhost:3001/public/images/'+book.image} className="book-image-detail" alt={book.image}/>):(<></>)} 
                                             </div>
                                         </div>
-                                        <div className="col-lg-6">
+                                        <div className="col-lg-6  mt-4 mt-lg-0">
                                             <label className="book-title-detail">{book.title}</label>
-                                            <label className="btn btn-success btn-sm float-right mt-2 smt-lg-0"> 
-                                                <i className="fas fa-check-circle"></i> Available
+                                            <label className="badge badge-success btn-sm float-right mt-2 smt-lg-0">
+                                                {status===1? 
+                                                <><i className="fas fa-check-circle"></i> Available</>
+                                                :
+                                                <><i className="fas fa-minus-circle"></i> Unavailable</>
+                                                }   
                                             </label>
                                             <br/>
                                             <label className="book-author">

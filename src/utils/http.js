@@ -12,6 +12,19 @@ export const getAllBooks = (props) => {
     return axios.get(`${BASE_URL}/book?${qs.stringify(requestData)}`)
 }
 
+export const getMyBooks = (props) => {
+    const {search,sort,asc,requestPage,limit} = props
+    const requestData = {
+        search,sort,asc,requestPage,limit
+    }
+    return axios.get(`${BASE_URL}/book/mybooks?${qs.stringify(requestData)}`,{
+        headers:{
+            'Authorization' : `Bearer ${API_TOKEN}`,
+            'Content-Type' : 'application/x-www-form-urlencoded'
+        }
+    })
+}
+
 export const getBookById = (bookId) => {
     return axios.get(`${BASE_URL}/book/${bookId}`)
 }
@@ -20,11 +33,9 @@ export const putBook = (body, id) => {
     const data = new FormData()
     data.append('title', body.title) 
     data.append('description', body.description) 
-    console.log(body)
     if(body.image){data.append('image', body.image)} 
     data.append('id_author', body.id_author) 
     data.append('id_genre', body.id_genre) 
-    console.log(data)
     return axios.put(`${BASE_URL}/book/${id}`,data,{
         headers:{
             'Authorization' : `Bearer ${API_TOKEN}`,
@@ -33,6 +44,51 @@ export const putBook = (body, id) => {
         }
     })
 }
+
+export const deleteBook = (id) => {
+    return axios.delete(`${BASE_URL}/book/${id}`,{
+        headers:{
+            'Authorization' : `Bearer ${API_TOKEN}`,
+            'Content-Type' : 'application/x-www-form-urlencoded'
+        }
+    })
+}
+
+export const postBook = (body) => {
+    const data = new FormData()
+    data.append('title', body.title) 
+    data.append('description', body.description) 
+    if(body.image){data.append('image', body.image)} 
+    data.append('id_author', body.id_author) 
+    data.append('id_genre', body.id_genre) 
+    return axios.post(`${BASE_URL}/book`,data,{
+        headers:{
+            'Authorization' : `Bearer ${API_TOKEN}`,
+            'Content-Type' : 'multipart/form-data',
+            'Type' : 'formData'
+        }
+    })
+}
+
+export const transactionBook = (body,id) => {
+    return axios.put(`${BASE_URL}/book/transaction/${id}`,qs.stringify(body),{
+        headers:{
+            'Authorization' : `Bearer ${API_TOKEN}`,
+            'Content-Type' : 'application/x-www-form-urlencoded'
+        }
+    })
+}
+
+export const checkBook = (id) => {
+    return axios.get(`${BASE_URL}/book/check/${id}`,{
+        headers:{
+            'Authorization' : `Bearer ${API_TOKEN}`,
+            'Content-Type' : 'application/x-www-form-urlencoded'
+        }
+    })
+}
+
+
 export const getAuthor = () => {
     return axios.get(`${BASE_URL}/author`)
 }
@@ -99,6 +155,10 @@ export const postGenre = (body) => {
 
 export const postLogin = (body) => {
     return axios.post(`${BASE_URL}/auth/login`,qs.stringify(body))
+}
+
+export const postRegister = (body) => {
+    return axios.post(`${BASE_URL}/auth/register`,qs.stringify(body))
 }
 
 export const postLogout = (body) => {

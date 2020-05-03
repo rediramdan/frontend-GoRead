@@ -28,6 +28,7 @@
 }
 .l-app{
     color: #099146;
+    display:inline-block;
 }
 .bold{
     font-weight:bold;
@@ -96,6 +97,9 @@
 .p{
     line-height: 20px !important;
 }
+.menu{
+    display: none;
+}
 
 
 @keyframes lighter{
@@ -132,4 +136,40 @@
         text-align: center;
         height: 250px;
     }
+
+    .menu{
+        display: block;
+        background-color: white;
+        box-shadow: 0 0 10px rgba(0,0,0,0.3);
+        position: fixed;
+        z-index: 9999;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding:15px 30px;
+      }
+
+      .no-arrow::after{
+        display: none !important;
+      }
+      .no-arrow::before{
+        display: none !important;
+      }
+
+      .menu .menu-item{
+        float: left;
+        width: 30%;
+        text-align: center;
+        line-height: 15px;
+        margin-left: 30px;
+        margin-right: 20px;
+      }
+
+      .menu .menu-item a{
+        color: rgba(0,0,0,0.3);
+      }
+
+      .active{
+        color: #099146 !important;
+      }
 }

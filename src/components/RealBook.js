@@ -1,6 +1,6 @@
 import React from 'react'
 import {Link} from 'react-router-dom'
-function RealBook({data}){
+function RealBook({data,name}){
     return (
         <div className="col-lg-4 mt-3">
             <div className="card">
@@ -12,7 +12,7 @@ function RealBook({data}){
                             </div>
                         </div>
                         <div className="col-6">
-                        <Link to={'book/'+btoa(data.id)}>
+                        <Link to={'/book/'+btoa(data.id)}>
                         <label className="book-title text-dark">{data.title}</label><br/>
                         </Link>
                         <label className="book-author">
@@ -22,6 +22,10 @@ function RealBook({data}){
                         <label className="book-author">
                             <small>Author</small><br/>
                             {data.author_name}
+                        </label>
+                        <label className="book-author">
+                            <small>{name}</small><br/>
+                            {new Date(data.created_at).toDateString()}
                         </label>
                         </div>
                     </div>

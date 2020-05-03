@@ -4,12 +4,10 @@ import Nav from '../components/Nav'
 import Footer from '../components/Footer'
 import { postRegister } from '../utils/http'
 
-class Register extends Component{
+class ProfileSetting extends Component{
 
     state = {
         username:"",
-        password:"",
-        password2:"",
         name:"",
         match:true,
         usernameCheck:true,
@@ -19,14 +17,6 @@ class Register extends Component{
 
     handlerChange = (e) => {
         const key = e.target.name
-        if(key === "password2"){
-            if(e.target.value !== this.state.password){
-                this.setState({match:false})
-            }else{
-                this.setState({match:true})
-            }
-        }
-
         if(key === "username"){
             if(e.target.value.indexOf(' ') >= 0){
                 this.setState({usernameCheck:false})
@@ -40,20 +30,20 @@ class Register extends Component{
     }
 
     handlerSubmit = async (e) => {
-        const {username,password,name,usernameCheck,match} = this.state
-        if(usernameCheck&&match){
+        const {username,name,usernameCheck} = this.state
+        if(usernameCheck){
             e.preventDefault()
             this.setState({
                 isLoading:true
             })
-            await postRegister({username,password,name})
+            await postRegister({username,name})
             .then((response) => {
                 this.setState({
                     isLoading:false,
                     response: response.data.data
                 })
                 localStorage.clear()
-                this.props.history.push('/login')
+                window.location.href =process.env.REACT_APP_BASE_URL+'/login'
             })
             .catch((error) => {
                 this.setState({
@@ -68,7 +58,7 @@ class Register extends Component{
 
 
     render(){
-        const {isLoading,match,usernameCheck} = this.state
+        const {isLoading,usernameCheck} = this.state
         return(
             <>
             <Nav {...this.props} name={'register'}/>
@@ -93,14 +83,9 @@ class Register extends Component{
                             <small>Username</small>
                             {usernameCheck?"":<small className="text-danger"> | Username cannot use space</small>}
                             <input type="text" name="username" className={usernameCheck?"form-control mb-3 ":"form-control mb-3 is-invalid"} onChange={this.handlerChange}/>
-                            <small>Password</small>
-                            <input type="password" name="password" className="form-control mb-3" onChange={this.handlerChange}/>
-                            <small>Confirm Password</small>
-                            {match?"":<small className="text-danger"> | Confirm password doesn't match</small>}
-                            <input type="password" name="password2" className={match?"form-control mb-3 ":"form-control mb-3 is-invalid"} onChange={this.handlerChange}/>
                             <button className="btn btn-success form-control" onClick={this.handlerSubmit}>
-                               {isLoading ? <i className="fas fa-spinner fa-pulse mr-2"></i>: ""}
-                                Register
+                               {isLoading ? <i className="fas fa-spinner fa-pulse mr-2"></i>: <i className="fas fa-save mr-2"></i>}
+                                Save
                             </button>
                         </form>
                     </div>
@@ -112,4 +97,4 @@ class Register extends Component{
     }
 }
 
-export default Register
+export default ProfileSetting
